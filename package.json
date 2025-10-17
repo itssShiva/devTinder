@@ -1,0 +1,30 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "Tinder for developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itssShiva/devTinder.git"
+  },
+  "keywords": [
+    "express",
+    "tinder",
+    "mongodb",
+    "react",
+    "nodejs"
+  ],
+  "author": "Shiva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itssShiva/devTinder/issues"
+  },
+  "homepage": "https://github.com/itssShiva/devTinder#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
