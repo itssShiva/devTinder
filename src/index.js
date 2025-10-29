@@ -69,12 +69,19 @@ app.get('/deleteuser',async(req,res)=>{
 })
 
 //Update the User
-app.patch('/updateuser',async(req,res)=>{
-        const userId=req.body.Id;
-    try {
-        
-        console.log(userId)
+app.patch('/updateuser/:userId',async(req,res)=>{
+        const userId=req.params.userId;
         const data=req.body;
+    try {
+        const allowed_updates=["photoUrl","about","gender","age","skills"];
+        const isUpdateAllowed=Object.keys(data).every((k)=>(allowed_updates.includes(k)));
+        if(!isUpdateAllowed){
+            throw new Error("Update is not allowed");
+        }
+        if(data.skills&&data?.skills.length>5){
+            throw new Error("User cannot have more than 5 skills");
+        }
+        
         const record=await User.findByIdAndUpdate(userId,data,{new:true,runValidators:true});
         res.status(200).send(record);
     } catch (error) {
