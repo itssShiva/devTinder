@@ -21,7 +21,13 @@ const userSchema=new Schema({
         required:true,
         unique:true,
         trim:true,
-        lowercase:true
+        lowercase:true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Email is not valid!");
+            }
+        }
+
     },
     password:{
         type:String,
@@ -36,13 +42,18 @@ const userSchema=new Schema({
             lowercase:true,
         validate(value){
             if(!["male","female","others"].includes(value)){
-                throw new Error("Gender data is not valid")
+                throw new Error("Gender data is not valid");
             }
         }
     },
     photoUrl:{
         type:String,
-        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz68b1g8MSxSUqvFtuo44MvagkdFGoG7Z7DQ&s"
+        default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz68b1g8MSxSUqvFtuo44MvagkdFGoG7Z7DQ&s",
+         validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("PhotoUrl  is not valid!");
+            }
+        }
     },
     about:{
         type:String,
