@@ -33,6 +33,11 @@ const userSchema=new Schema({
         type:String,
         trim:true,
         required:true,
+         validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("Enter a strong password");
+            }
+        }
     },
     age:{
         type:Number,
