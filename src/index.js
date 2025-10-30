@@ -4,6 +4,7 @@ const dbConnect=require('./config/database');
 const User=require("./models/user")
 const {signupValidations}=require('./utils/validation')
 const bcrypt=require('bcrypt')
+const validator=require('validator')
 
 dbConnect()
 .then(()=>{
@@ -44,6 +45,31 @@ app.post('/signup',async(req,res)=>{
     }
 })
 
+//Login api
+app.post('/login',async(req,res)=>{
+    try {
+        const{emailId,password}=req.body;
+        if(!validator.isEmail(emailId)){
+            throw new Error("Invalid Email");
+        }
+        const userRecord=await User.findOne({emailId:emailId})
+
+        if(!userRecord){
+            throw new Error("User not found");
+        }
+
+        const isValidPassword=bcrypt.compare(password,userRecord.password);
+        if(isValidPassword){
+            res.status(200).send("Login successfully");
+        }
+        else{
+            throw new Error("Invalid Credentials");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("Issue in login "+error.message);
+    }
+})
 //Get User Api
 app.get('/getuser',async(req,res)=>{
     const userEmail=req.body.email;
