@@ -2,6 +2,8 @@ const express=require('express')
 const app=express();
 const dbConnect=require('./config/database');
 const User=require("./models/user")
+const {signupValidations}=require('./utils/validation')
+const bcrypt=require('bcrypt')
 
 dbConnect()
 .then(()=>{
@@ -19,14 +21,25 @@ app.use(express.json());
 //Create User Api
 app.post('/signup',async(req,res)=>{
     try {
+
+        signupValidations(req);
         //Creating a new instance of the User model
-        const record=new User(req.body)  
+        const{firstName,lastName,emailId,password}=req.body;
+
+        const hashedPasssword=await bcrypt.hash(password,10);
+
+        const record=new User({
+            firstName:firstName,
+            lastName:lastName,
+            emailId:emailId,
+            password:hashedPasssword
+            })  
         console.log(req.body)
     await record.save();
     res.send("User created successfully");
 
     } catch (error) {
-        res.send("Issue while creating user");
+        res.send("Issue while creating user "+error.message);
         console.log(error)
     }
 })
@@ -39,7 +52,7 @@ app.get('/getuser',async(req,res)=>{
         res.status(200).send(record);
     } catch (error) {
         console.log(error);
-        res.status(404).send("Something went wrong");
+        res.status(404).send("Something went wrong "+error.message);
     }
 })
 
@@ -50,7 +63,7 @@ app.get('/feed',async(req,res)=>{
          res.status(200).send(record)
     } catch (error) {
          console.log(error);
-        res.status(404).send("Something went wrong");
+        res.status(404).send("Something went wrong "+error.message);
     }
 
 })
@@ -64,7 +77,7 @@ app.get('/deleteuser',async(req,res)=>{
         res.status(200).send("User deleted successfully");
     } catch (error) {
         console.log(error);
-        res.status(404).send("Something went wrong");
+        res.status(404).send("Something went wrong "+error.message);
     }
 })
 
@@ -86,7 +99,7 @@ app.patch('/updateuser/:userId',async(req,res)=>{
         res.status(200).send(record);
     } catch (error) {
          console.log(error);
-        res.status(404).send("Something went wrong");
+        res.status(404).send("Something went wrong "+error.message);
     }
 })
 
@@ -99,7 +112,7 @@ app.patch('/updateemail',async(req,res)=>{
         res.status(200).send(record);
     } catch (error) {
          console.log(error);
-        res.status(404).send("Something went wrong");
+        res.status(404).send("Something went wrong "+error.message);
     }
 })
 
