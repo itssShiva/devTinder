@@ -59,11 +59,9 @@ app.post("/login", async (req, res) => {
       throw new Error("User not found");
     }
 
-    const isValidPassword = bcrypt.compare(password, userRecord.password);
+    const isValidPassword = await userRecord.validatePassword(password);
     if (isValidPassword) {
-      const token = await jwt.sign({ id: userRecord._id }, "devTinder@123", {
-        expiresIn: "1d",
-      });
+      const token = await userRecord.getJWT();
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
       });
