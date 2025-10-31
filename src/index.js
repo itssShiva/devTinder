@@ -5,7 +5,8 @@ const User=require("./models/user")
 const {signupValidations}=require('./utils/validation')
 const bcrypt=require('bcrypt')
 const validator=require('validator')
-
+const cookieParser=require('cookie-parser')
+const jwt=require('jsonwebtoken')
 dbConnect()
 .then(()=>{
     console.log('DB connection successfull');
@@ -18,6 +19,7 @@ dbConnect()
 })
 
 app.use(express.json());
+app.use(cookieParser())
 
 //Create User Api
 app.post('/signup',async(req,res)=>{
@@ -60,16 +62,40 @@ app.post('/login',async(req,res)=>{
 
         const isValidPassword=bcrypt.compare(password,userRecord.password);
         if(isValidPassword){
+            const token=await jwt.sign({id:userRecord._id},"devTinder@123")
+            res.cookie("token",token);
             res.status(200).send("Login successfully");
         }
         else{
             throw new Error("Invalid Credentials");
         }
+
     } catch (error) {
         console.log(error);
         res.status(404).send("Issue in login "+error.message);
     }
 })
+
+//Profile Api
+app.get('/profile',async(req,res)=>{
+    try {
+        const cookies=req.cookies;
+    if(!cookies){
+        throw new Error('Invalid Token')
+    }
+    const decoded=await jwt.verify(cookies.token,'devTinder@123');
+    console.log(decoded.id);
+    const id=decoded.id;
+    const user=await User.findById(id);
+    res.status(200).send(user);
+    } catch (error) {
+        console.log(error);
+        res.status(404).send("Issue in login "+error.message);
+    }
+    
+})
+
+
 //Get User Api
 app.get('/getuser',async(req,res)=>{
     const userEmail=req.body.email;
