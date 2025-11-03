@@ -23,4 +23,8 @@ const editProfileValidation=(req)=>{
    return editAllows;
 }
 
+const passwordValidation=(req)=>{
+    
+}
+
 module.exports={signupValidations,editProfileValidation}
