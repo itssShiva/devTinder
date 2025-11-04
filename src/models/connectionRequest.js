@@ -13,10 +13,19 @@ const connectionRequestSchema=new Schema({
     status:{
         type:String,
         enum:{
-            values:["ignore","accepted","interested","rejected"],
-            message:`{Value} is incorrect status type`
+            values:["ignored","accepted","interested","rejected"],
+            message:`{VALUE} is incorrect status type`
         }
     }
 },{timestamps:true})
+
+connectionRequestSchema.pre("save",function(next){
+    const connectionRequest=this;
+    //Check if user is sending request to its own id
+    if(connectionRequest.fromUserId.equals(connectionRequest.toUserId)){
+        throw new Error("Cannot send connection request to yourself");
+    }
+    next();
+})
 
 module.exports=mongoose.model("ConnectionRequest",connectionRequestSchema);

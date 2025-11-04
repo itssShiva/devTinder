@@ -9,6 +9,24 @@ requestRouter.post("/request/send/:status/:toUserId", authUser, async (req, res)
     const fromUserId=req.user._id;
     const toUserId=req.params.toUserId;
     const status=req.params.status;
+
+    const isAllowedStatus=["interested","ignored"]
+    if(!isAllowedStatus.includes(status)){
+      return res.json({message:"Invalid Status type"});
+    }
+    const existingRequest=await ConnectionRequest.findOne({$or:
+      [{fromUserId,toUserId},
+        {fromUserId:toUserId,toUserId:fromUserId}
+      ]})
+      if(existingRequest){
+        return res.json({message:"Request already exists"})
+      }
+
+      const existstoUser=await User.findById(toUserId);
+      if(!existstoUser){
+        return res.json({message:"Connection sent to Invalid User"})
+      }
+
     const connectionRequest=new ConnectionRequest({
       fromUserId,
       toUserId,
