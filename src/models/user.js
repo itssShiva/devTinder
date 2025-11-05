@@ -93,4 +93,6 @@ userSchema.methods.validatePassword=async function(password){
   return validPassword;
 }
 
+userSchema.index({firstName:1,lastName:1})
+userSchema.index({gender:1})
 module.exports = mongoose.model("User", userSchema);
