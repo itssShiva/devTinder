@@ -18,7 +18,7 @@ profileRouter.get("/profile/view", authUser, async (req, res) => {
 
 
 //Edit profille Api
-profileRouter.post('/profile/edit',authUser,async(req,res)=>{
+profileRouter.patch('/profile/edit',authUser,async(req,res)=>{
      try {
        if(!editProfileValidation(req)){
         throw new Error("Invalid edit fields");
@@ -36,7 +36,7 @@ profileRouter.post('/profile/edit',authUser,async(req,res)=>{
 })
 
 //Edit Profile Password
-profileRouter.post('/profile/password',authUser,async(req,res)=>{
+profileRouter.patch('/profile/password',authUser,async(req,res)=>{
 try {
     const user=req.user;
     const {oldPassword,newPassword}=req.body;
