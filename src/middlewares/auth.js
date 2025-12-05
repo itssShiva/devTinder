@@ -2,11 +2,11 @@ const jwt=require('jsonwebtoken');
 const User=require('../models/user');
 const authUser=async(req,res,next)=>{
 try {
-        const cookies=req.cookies;
-    if(!cookies){
-        throw new Error('Invalid Token')
+        const token=req.cookies.token;
+    if(!token){
+       return res.status(401).send("Please Login!!");
     }
-    const decoded=await jwt.verify(cookies.token,'devTinder@123');
+    const decoded= jwt.verify(token,'devTinder@123');
     console.log(decoded.id);
     const id=decoded.id;
     const user=await User.findById(id);
