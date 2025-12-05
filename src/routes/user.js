@@ -74,7 +74,7 @@ userRouter.get('/feed',authUser,async(req,res)=>{
         $and:[{_id:{$nin:Array.from(hideUsersfromFeed)}},
                 {_id:{$ne:loggedInUser._id}}
         ]
-    }).select("firstName lastName").skip(skip).limit(limit);
+    }).select("firstName lastName about photoUrl skills").skip(skip).limit(limit);
 
     res.send(user)
     } catch (error) {
