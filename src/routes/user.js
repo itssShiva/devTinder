@@ -33,8 +33,8 @@ userRouter.get("/user/connections",authUser,async(req,res)=>{
             {fromUserId:loggedInUser._id,status:"accepted"},
             {toUserId:loggedInUser._id,status:"accepted"}
         ]
-    }).populate("fromUserId","firstName lastName")
-    .populate("toUserId","firstName lastName")
+    }).populate("fromUserId","firstName lastName age skills gender about photoUrl")
+    .populate("toUserId","firstName lastName age skills gender about photoUrl")
 
     const data=connections.map((row)=>
     {

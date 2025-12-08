@@ -9,7 +9,8 @@ const connectionRequestSchema=new Schema({
     },
     toUserId:{
         type:mongoose.Schema.ObjectId,
-        required:true
+        required:true,
+        ref:"User"
     },
     status:{
         type:String,

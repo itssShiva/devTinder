@@ -24,7 +24,12 @@ profileRouter.patch('/profile/edit',authUser,async(req,res)=>{
         throw new Error("Invalid edit fields");
       }
       const loggedInUser=req.user;
-      Object.keys(req.body).every((field)=>loggedInUser[field]=req.body[field]);
+     Object.keys(req.body).forEach((field) => {
+  loggedInUser[field] = req.body[field];
+});
+
+await loggedInUser.save();
+
       res.status(200).json({
         message:`${loggedInUser.firstName}, your profile updated successfully `,
         data:loggedInUser
