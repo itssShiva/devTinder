@@ -11,7 +11,7 @@ userRouter.get("/user/request/received",authUser,async(req,res)=>{
     const requestPending=await ConnectionRequest.find({
         toUserId:loggedInUser._id,
         status:"interested"
-    }).populate("fromUserId","firstName lastName")
+    }).populate("fromUserId","firstName lastName age about photoUrl gender")
     //we can also write like this
     // .populate("User",["firstName","lastName"])
     return res.status(200).json({
