@@ -12,7 +12,7 @@ authRouter.post("/signup", async (req, res) => {
   try {
     signupValidations(req);
     //Creating a new instance of the User model
-    const { firstName, lastName, emailId, password } = req.body;
+    const { firstName, lastName, emailId, password,age,photoUrl,gender,skills,about } = req.body;
 
     const hashedPasssword = await bcrypt.hash(password, 10);
 
@@ -21,12 +21,17 @@ authRouter.post("/signup", async (req, res) => {
       lastName: lastName,
       emailId: emailId,
       password: hashedPasssword,
+      age:age,
+      photoUrl:photoUrl,
+      gender:gender,
+      skills:skills,
+      about:about,
     });
     console.log(req.body);
     await record.save();
-    res.send("User created successfully");
+    res.status(200).send("User created successfully");
   } catch (error) {
-    res.send("Issue while creating user " + error.message);
+    res.status(400).send(error.message);
     console.log(error);
   }
 });
