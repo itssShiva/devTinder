@@ -1,12 +1,13 @@
 const jwt=require('jsonwebtoken');
 const User=require('../models/user');
+const JWT_SECRET=require('../secret')
 const authUser=async(req,res,next)=>{
 try {
         const token=req.cookies.token;
     if(!token){
        return res.status(401).send("Please Login!!");
     }
-    const decoded= jwt.verify(token,'devTinder@123');
+    const decoded= jwt.verify(token,JWT_SECRET);
     console.log(decoded.id);
     const id=decoded.id;
     const user=await User.findById(id);
