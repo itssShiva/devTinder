@@ -8,6 +8,8 @@ const requestRouter=require('./routes/requests');
 const userRouter=require('./routes/user')
 const cors=require('cors')
 
+
+
 app.use(cors({
   origin:'http://localhost:5173',
   credentials:true,
@@ -16,12 +18,13 @@ app.use(cors({
 dbConnect()
   .then(() => {
     console.log("DB connection successfull");
+   
     app.listen(3000, () => {
       console.log("Server running at port ", 3000);
     });
   })
   .catch(() => {
-    console.log("Issue while connectin to database");
+    console.log("Issue while connecting to database");
   });
 
 app.use(express.json());

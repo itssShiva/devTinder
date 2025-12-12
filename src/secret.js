@@ -1,0 +1,1 @@
+export const MONGO_URL="mongodb+srv://shiva262architect_db_user:hAUG4k2JwZJ5pE55@devtinder.lzxuyim.mongodb.net/devTinder"
