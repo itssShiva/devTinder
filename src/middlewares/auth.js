@@ -10,6 +10,7 @@ try {
     const decoded= jwt.verify(token,JWT_SECRET);
     console.log(decoded.id);
     const id=decoded.id;
+    const user=await User.findById(id);
     if(!user){
         throw new Error("User not found!")
     }
