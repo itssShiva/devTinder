@@ -35,8 +35,7 @@ requestRouter.post("/request/send/:status/:toUserId", authUser, async (req, res)
     })   ;
     const data=await connectionRequest.save();
 
-    
-    console.log(emailRes)
+  
     res.status(200).json({
       message:"Connection request sent successfully",
       data
