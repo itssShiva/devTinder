@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { authUser } = require("../middlewares/auth");
 const validator = require("validator");
-const sendEmail=require('../utils/sendEmail')
+
+
 
 //Create User Api
 authRouter.post("/signup", async (req, res) => {
