@@ -3,6 +3,7 @@ const User = require("../models/user");
 const requestRouter=express.Router();
 const { authUser } = require("../middlewares/auth");
 const ConnectionRequest=require('../models/connectionRequest')
+
 //Profile Api
 requestRouter.post("/request/send/:status/:toUserId", authUser, async (req, res) => {
   try {
@@ -33,6 +34,9 @@ requestRouter.post("/request/send/:status/:toUserId", authUser, async (req, res)
       status
     })   ;
     const data=await connectionRequest.save();
+
+    
+    console.log(emailRes)
     res.status(200).json({
       message:"Connection request sent successfully",
       data

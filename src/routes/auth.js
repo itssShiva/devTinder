@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { authUser } = require("../middlewares/auth");
 const validator = require("validator");
+const sendEmail=require('../utils/sendEmail')
 
 //Create User Api
 authRouter.post("/signup", async (req, res) => {
@@ -29,6 +30,7 @@ authRouter.post("/signup", async (req, res) => {
     });
     console.log(req.body);
     await record.save();
+    
     res.status(200).send("User created successfully");
   } catch (error) {
     res.status(400).send(error.message);
@@ -55,6 +57,9 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
       });
+      console.log("ABOUT TO SEND EMAIL");
+    const emailRes=await sendEmail.run();
+    console.log("EMAIL RESPONSE 👉", emailRes);
       res.status(200).send(userRecord);
     } else {
       throw new Error("Invalid Credentials");
