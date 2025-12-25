@@ -58,7 +58,7 @@ authRouter.post("/login", async (req, res) => {
       res.cookie("token", token, {
         expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
       });
-      console.log("ABOUT TO SEND EMAIL");
+      
     
       res.status(200).send(userRecord);
     } else {
