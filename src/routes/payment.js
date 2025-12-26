@@ -88,4 +88,9 @@ paymentRouter.get("/premium/verify",authUser,async(req,res)=>{
   }
   return res.json({isPremium:false})
 })
+
+console.log("Payment details:", paymentDetails);
+console.log("Payment found in DB:", payment);
+console.log("User found:", user);
+
 module.exports = paymentRouter;
