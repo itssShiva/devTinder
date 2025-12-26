@@ -50,7 +50,7 @@ const User = require("../models/user");
 
 
 
-paymentRouter.post('/payment/webhook',async(req,res)=>{
+paymentRouter.post('/webhook',async(req,res)=>{
   try {
 
     const webhookSignature=req.get("X-Razorpay-Signature");
