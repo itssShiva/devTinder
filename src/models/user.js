@@ -47,6 +47,13 @@ const userSchema = new Schema(
       type: Number,
       min: 18,
     },
+    isPremium:{
+      type:Boolean,
+      default:false,
+    },
+    membershipType:{
+      type:String,
+    }, 
     gender: {
       type: String,
       lowercase: true,
