@@ -75,9 +75,7 @@ paymentRouter.post('/webhook',async(req,res)=>{
     user.membershipType=payment.notes.membershipType;
     await user.save();
 
-    console.log("Payment details:", paymentDetails);
-console.log("Payment found in DB:", payment);
-console.log("User found:", user);
+   
   } catch (error) {
     return res.status(500).json({message:error.message})
   }
@@ -85,11 +83,11 @@ console.log("User found:", user);
 
 
 paymentRouter.get("/premium/verify",authUser,async(req,res)=>{
-  const user=req.user;
+  const user=req.user.JSON();
   if(user.isPremium){
-    return res.json({isPremium:true})
+    return res.json({...user})
   }
-  return res.json({isPremium:false})
+  return res.json({...user})
 })
 
 
