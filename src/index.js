@@ -8,7 +8,8 @@ const requestRouter=require('./routes/requests');
 const userRouter=require('./routes/user')
 const cors=require('cors');
 const paymentRouter = require("./routes/payment");
-
+const http=require('http');
+const { socketInstance } = require("./utils/socket");
 
 
 app.use(cors({
@@ -16,11 +17,14 @@ app.use(cors({
   credentials:true,
 }))
 
+const server=http.createServer(app)
+
+socketInstance(server);
 dbConnect()
   .then(() => {
     console.log("DB connection successfull");
    
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log("Server running at port ", 3000);
     });
   })
