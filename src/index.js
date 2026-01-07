@@ -10,6 +10,7 @@ const cors=require('cors');
 const paymentRouter = require("./routes/payment");
 const http=require('http');
 const { socketInstance } = require("./utils/socket");
+const chatRouter = require("./routes/chat");
 
 
 app.use(cors({
@@ -39,6 +40,7 @@ app.use('/',profileRouter);
 app.use('/',requestRouter);
 app.use('/',userRouter);
 app.use('/',paymentRouter);
+app.use('/',chatRouter);
 
 
 
