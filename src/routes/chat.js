@@ -7,7 +7,7 @@ chatRouter.get('/chat/:targetUserId',authUser,async(req,res)=>{
    try {
      const userId=req.user._id;
     const {targetUserId}=req.params;
-    const chat=await Chat.findOne({
+    let chat=await Chat.findOne({
         participants:{$all:[userId,targetUserId]}
     })
     .populate({
