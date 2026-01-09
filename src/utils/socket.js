@@ -12,53 +12,63 @@ const getSecretRoomId = (userId, targetUserId) => {
 const socketInstance = (server) => {
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: ["http://localhost:5173"], // add your frontend domains
+      credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
+    console.log("⚡ New socket connection:", socket.id);
+
     socket.on("joinChat", ({ firstName, userId, targetUserId }) => {
       const roomId = getSecretRoomId(userId, targetUserId);
-      console.log(firstName + " has joined room with room id: " + roomId);
+      console.log(firstName + " joined room: " + roomId);
       socket.join(roomId);
     });
+
     socket.on(
       "sendMessage",
-      async ({ firstName, userId,lastName, targetUserId, newMessage }) => {
+      async ({ firstName, lastName, userId, targetUserId, newMessage }) => {
         const roomId = getSecretRoomId(userId, targetUserId);
-        console.log(firstName + " " + newMessage);
+        console.log(`${firstName} sent: ${newMessage}`);
 
-        //Agar chat pehle ho chuki hai
         try {
           let chat = await Chat.findOne({
             participants: { $all: [userId, targetUserId] },
           });
 
-          //pehla message bheja hai
           if (!chat) {
             chat = new Chat({
               participants: [userId, targetUserId],
               messages: [],
             });
           }
-          chat.messages.push({
+
+          const messageObj = {
             senderId: userId,
             newMessage,
-          });
+          };
+
+          chat.messages.push(messageObj);
           await chat.save();
-        } catch (error) {
-          console.log(error);
+
+          // 🔹 emit to frontend with senderId
+          io.to(roomId).emit("messageReceived", {
+            senderId: userId,
+            firstName,
+            lastName,
+            newMessage,
+          });
+        } catch (err) {
+          console.log("Socket sendMessage error:", err);
         }
-       
-       
-        io.to(roomId).emit("messageReceived", {
-          firstName,
-          lastName,
-          newMessage,
-        });
       }
     );
-    socket.on("disconnect", () => {});
+
+    socket.on("disconnect", () => {
+      console.log("⚡ Socket disconnected:", socket.id);
+    });
   });
 };
+
 module.exports = { socketInstance };
