@@ -2,12 +2,9 @@ const validator=require('validator');
 const { aggregate } = require('../models/user');
 
 const signupValidations=(req)=>{
-    const{firstName,emailId,password}=req.body;
-    if(!firstName||!emailId||!password){
-        throw new Error("firstName,emailId,password cannot be empty");
-    }
-    if(firstName.length<4||firstName.length>50){
-        throw new Error("first name should be between 4-50 characters");
+    const{emailId,password,age,skills}=req.body;
+    if(!emailId||!password){
+        throw new Error("emailId and password cannot be empty");
     }
     if(!validator.isEmail(emailId)){
         throw new Error("Invalid Email");

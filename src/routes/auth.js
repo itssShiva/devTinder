@@ -14,27 +14,24 @@ authRouter.post("/signup", async (req, res) => {
   try {
     signupValidations(req);
     //Creating a new instance of the User model
-    const { firstName, lastName, emailId, password,age,photoUrl,gender,skills,about } = req.body;
+    const { emailId, password, age, skills } = req.body;
 
     const hashedPasssword = await bcrypt.hash(password, 10);
 
     const record = new User({
-      firstName: firstName,
-      lastName: lastName,
+      firstName: emailId.split('@')[0], // Default firstName from email
+      lastName: "User",
       emailId: emailId,
       password: hashedPasssword,
-      age:age,
-      photoUrl:photoUrl,
-      gender:gender,
-      skills:skills,
-      about:about,
+      age: age,
+      skills: skills,
     });
     console.log(req.body);
     await record.save();
     
-    res.status(200).send("User created successfully");
+    res.status(200).json({ message: "User created successfully" });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json({ message: error.message });
     console.log(error);
   }
 });
@@ -59,14 +56,14 @@ authRouter.post("/login", async (req, res) => {
         expires: new Date(Date.now() + 8 * 3600000), // cookie will be removed after 8 hours
       });
       
-    
-      res.status(200).send(userRecord);
+      res.status(200).json(userRecord);
     } else {
       throw new Error("Invalid Credentials");
     }
   } catch (error) {
     console.log(error);
-    res.status(404).send("Error " + error.message);
+    const statusCode = error.message === "Invalid Email" ? 400 : 401;
+    res.status(statusCode).json({ message: error.message });
   }
 });
 
