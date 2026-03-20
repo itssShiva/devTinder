@@ -10,14 +10,14 @@ const userSchema = new Schema(
   {
     firstName: {
       type: String,
-      minLength: 5,
+      minLength: 2,
       maxLength: 50,
       trim: true,
       required: true,
     },
     lastName: {
       type: String,
-      minLength: 5,
+      minLength: 2,
       maxLength: 50,
       trim: true,
     },

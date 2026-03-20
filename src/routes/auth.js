@@ -20,7 +20,7 @@ authRouter.post("/signup", async (req, res) => {
 
     const record = new User({
       firstName: emailId.split('@')[0], // Default firstName from email
-      lastName: "User",
+      lastName: "DevUser",
       emailId: emailId,
       password: hashedPasssword,
       age: age,
