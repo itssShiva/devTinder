@@ -50,44 +50,60 @@ paymentRouter.post("/user/payment/create", authUser, async (req, res) => {
 
 
 
-paymentRouter.post('/webhook',async(req,res)=>{
+paymentRouter.post('/webhook', async (req, res) => {
   try {
+    const webhookSignature = req.get("X-Razorpay-Signature");
 
-    const webhookSignature=req.get("X-Razorpay-Signature");
+    if (!webhookSignature) {
+      return res.status(401).json({ message: "Invalid Signature" })
+    }
+
     validateWebhookSignature(
       JSON.stringify(req.body),
       webhookSignature,
       RAZORPAY_WEBHOOK_SECRET
     );
 
-    if(!webhookSignature){
-      return res.status(500).json({message:"Signature is invalid"})
+    const paymentDetails = req.body.payload.payment.entity;
+    const event = req.body.event;
+
+    const payment = await Payment.findOne({ orderId: paymentDetails.order_id })
+    if (!payment) {
+      return res.status(404).json({ message: "Payment sequence not found" })
     }
 
-    const paymentDetails=req.body.payload.payment.entity;
-
-    const payment=await Payment.findOne({orderId:paymentDetails.order_id})
-    payment.status=paymentDetails.status;
+    payment.status = paymentDetails.status;
     await payment.save();
 
-    const user=await User.findOne({_id:payment.userId});
-    user.isPremium=true;
-    user.membershipType=payment.notes.membershipType;
-    await user.save();
+    console.log("Webhook event received:", event, "Status:", paymentDetails.status);
 
-   
+    // Only upgrade if the payment is captured successfully
+    if (event === "payment.captured") {
+      const user = await User.findOne({ _id: payment.userId });
+      if (user) {
+        user.isPremium = true;
+        user.membershipType = payment.notes.membershipType;
+        await user.save();
+        console.log(`User ${user.firstName} upgraded to premium.`);
+      }
+    }
+
+    return res.status(200).json({ message: "Webhook processed successfully" });
+
   } catch (error) {
-    return res.status(500).json({message:error.message})
+    console.error("Webhook Error:", error);
+    return res.status(500).json({ message: error.message })
   }
 })
 
 
 paymentRouter.get("/user/premium/verify", authUser, async (req, res) => {
-  const user=req.user.toJSON();
-  if(user.isPremium){
-    return res.json({...user})
+  try {
+    const user = await User.findById(req.user._id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-  return res.json({...user})
 })
 
 

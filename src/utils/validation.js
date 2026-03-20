@@ -1,5 +1,4 @@
 const validator=require('validator');
-const { aggregate } = require('../models/user');
 
 const signupValidations=(req)=>{
     const{emailId,password,age,skills}=req.body;
