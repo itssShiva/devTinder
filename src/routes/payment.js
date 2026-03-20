@@ -9,7 +9,7 @@ const {RAZORPAY_WEBHOOK_SECRET}=require('../secret');
 const User = require("../models/user");
 
 
- paymentRouter.post("/payment/create", authUser, async (req, res) => {
+paymentRouter.post("/user/payment/create", authUser, async (req, res) => {
   try {
     const {firstName,lastName,emailId}=req.user
     const{membershipType}=req.body;
@@ -82,7 +82,7 @@ paymentRouter.post('/webhook',async(req,res)=>{
 })
 
 
-paymentRouter.get("/premium/verify",authUser,async(req,res)=>{
+paymentRouter.get("/user/premium/verify", authUser, async (req, res) => {
   const user=req.user.toJSON();
   if(user.isPremium){
     return res.json({...user})
